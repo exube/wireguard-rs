@@ -179,9 +179,10 @@ impl WireguardInterfaceApi for WGApi<Userspace> {
         );
 
         // assign IP address to interface
-        let address = IpAddrMask::from_str(&config.address)?;
-        self.assign_address(&address)?;
-
+        if let Some(address) = &config.address {
+            let address = IpAddrMask::from_str(address)?;
+            self.assign_address(&address)?;
+        }
         // configure interface
         debug!(
             "Applying the WireGuard host configuration for interface {}",
@@ -209,8 +210,8 @@ impl WireguardInterfaceApi for WGApi<Userspace> {
         }
 
         info!(
-            "Interface {} has been successfully configured. It has been assigned the following address: {}",
-            self.ifname, address
+            "Interface {} has been successfully configured.",
+            self.ifname
         );
         debug!(
             "Interface {} configured with config: {config:?}",

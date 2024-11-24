@@ -51,16 +51,18 @@ impl WireguardInterfaceApi for WGApi<Kernel> {
         );
 
         // assign IP address to interface
-        debug!(
-            "Assigning address {} to interface {}",
-            config.address, self.ifname
-        );
-        let address = IpAddrMask::from_str(&config.address)?;
-        self.assign_address(&address)?;
-        debug!(
-            "Address {} assigned to interface {} successfully",
-            config.address, self.ifname
-        );
+        if let Some(addr) = &config.address {
+            debug!(
+                "Assigning address {} to interface {}",
+                addr, self.ifname
+            );    
+            let address = IpAddrMask::from_str(addr)?;
+            self.assign_address(&address)?;
+            debug!(
+                "Address {} assigned to interface {} successfully",
+                addr, self.ifname
+            );
+        }
 
         // configure interface
         debug!(
@@ -88,8 +90,8 @@ impl WireguardInterfaceApi for WGApi<Kernel> {
         }
 
         info!(
-            "Interface {} has been successfully configured. It has been assigned the following address: {}",
-            self.ifname, address
+            "Interface {} has been successfully configured.",
+            self.ifname
         );
         debug!(
             "Interface {} configured with config: {config:?}",

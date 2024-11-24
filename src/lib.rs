@@ -101,7 +101,7 @@ pub enum IpVersion {
 pub struct InterfaceConfiguration {
     pub name: String,
     pub prvkey: String,
-    pub address: String,
+    pub address: Option<String>,
     pub port: u32,
     pub peers: Vec<Peer>,
     /// Maximum transfer unit. `None` means do not set MTU, but keep the system default.
